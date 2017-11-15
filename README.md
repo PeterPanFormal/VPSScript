@@ -2,8 +2,8 @@
 
 <br/>功能
 <br/>Features
-<br/>监控vps的流量, 并在流程超过限制的时候自动关闭对应的端口, 主要在使用有限流量的服务器翻墙的情况下使用
-<br/>Monitoring vps traffic, and automatically shut down the corresponding port when the process exceeds the limit, mainly in the case of cross GFW with server using a limited amount of traffic
+<br/>监控vps的流量, 并在流程超过限制的时候自动关闭对应的端口, 主要在通过有限流量的服务器翻墙的情况下使用
+<br/>Monitoring vps traffic, and automatically close the corresponding port when the process exceeds the limit, mainly in the case of cross GFW through a limited traffic server
 <br/>
 <br/>适用环境
 <br/>Applicable environment
