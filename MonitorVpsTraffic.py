@@ -57,47 +57,44 @@ if re.search(r"GiB",tx) or re.search(r"GiB",rx):
     rx_data =  float(re.sub(r"\s","",rx)[:-3])
     if rx_data > tx_data:
         tx_data = rx_data
-    # 大于490G关闭443 80端口
-    # Greater than 490G close the 443 80 port
+    # 大于490G关闭8888端口
+    # Greater than 490G close the 8888 port
     if tx_data > 490:
-        os.system("firewall-cmd --permanent --zone=public --remove-port=443/tcp")
-        os.system("firewall-cmd --permanent --zone=public --remove-port=80/tcp")
+        os.system("firewall-cmd --permanent --zone=public --remove-port=8888/tcp")
         os.system("firewall-cmd --reload")
-        os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量已超过490G，自动关闭443 80端口' >> /root/FlowControl/stopss.log")
+        os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量已超过490G，自动关闭8888端口' >> /root/FlowControl/stopss.log")
+        os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' Server traffic has exceeded 490G, 8888 ports automatically shut down' >> /root/FlowControl/stopss.log")
     elif tx_data > 499:
         os.system("firewall-cmd --permanent --zone=public --remove-port=80/tcp")
         os.system("firewall-cmd --permanent --zone=public --remove-port=443/tcp")
         os.system("firewall-cmd --reload")
         os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量已超过499G，自动关闭80 443端口' >> /root/FlowControl/stopss.log")
+        os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' Server traffic has exceeded 499G and 80 443 ports are automatically shut down' >> /root/FlowControl/stopss.log")
     else:
+        # 添加对每日流量的限制
+        # Add limits on daily traffic
         today = datetime.date.today()
         _, last_day_num = calendar.monthrange(today.year, today.month)
         if tx_data >= today.day/last_day_num * 500:
-            os.system("firewall-cmd --permanent --zone=public --remove-port=8888/tcp")
-            os.system("firewall-cmd --permanent --zone=public --remove-port=8899/tcp")
-            os.system("firewall-cmd --permanent --zone=public --remove-port=8888/udp")
-            os.system("firewall-cmd --permanent --zone=public --remove-port=8899/udp")
-            os.system("firewall-cmd --permanent --zone=public --remove-port=24/tcp")
-            os.system("firewall-cmd --permanent --zone=public --remove-port=24/udp")
-            os.system("firewall-cmd --reload")
-            os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量当前已超限，自动关闭8888 8899 24端口' >> /root/FlowControl/stopss.log")
+           os.system("firewall-cmd --permanent --zone=public --remove-port=8888/tcp")
+           os.system("firewall-cmd --reload")
+           os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量已超限，自动关闭8888端口' >> /root/FlowControl/stopss.log")
+           os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' Server traffic is overrun, 8888 port is automatically shut down' >> /root/FlowControl/stopss.log")
         else:
             os.system("firewall-cmd --permanent --zone=public --add-port=8888/tcp")
-            os.system("firewall-cmd --permanent --zone=public --add-port=8899/tcp")
-            os.system("firewall-cmd --permanent --zone=public --add-port=8888/udp")
-            os.system("firewall-cmd --permanent --zone=public --add-port=8899/udp")
-            os.system("firewall-cmd --permanent --zone=public --add-port=24/tcp")
-            os.system("firewall-cmd --permanent --zone=public --add-port=24/udp")
             os.system("firewall-cmd --reload")
-            os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量当前未超限，自动开启8888 8899 24端口' >> /root/FlowControl/stopss.log")
-    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器当前已使用流量 "+str(tx_data)+" GiB' >> /root/FlowControl/stopss.log"
+            os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器流量当前未超限，自动开启8888端口' >> /root/FlowControl/stopss.log")
+            os.system("date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' Server traffic is currently not overrun, automatically opening 8888 port' >> /root/FlowControl/stopss.log")
+    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器已使用流量 "+str(tx_data)+" GiB' >> /root/FlowControl/stopss.log"
+    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' The server is already using traffic "+str(tx_data)+" GiB' >> /root/FlowControl/stopss.log"
     os.system(cmd)
 elif re.search(r"MiB",tx) and re.search(r"MiB",rx):
     tx_data =  float(re.sub(r"\s","",tx)[:-3])
     rx_data =  float(re.sub(r"\s","",rx)[:-3])
     if rx_data > tx_data:
         tx_data = rx_data
-    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器当前已使用流量 "+str(tx_data)+" MiB' >> /root/FlowControl/stopss.log"
+    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' 服务器已使用流量 "+str(tx_data)+" MiB' >> /root/FlowControl/stopss.log"
+    cmd = "date=`date +%Y-%m-%d_%H:%M:%S` && echo ${date}' The server is already using traffic "+str(tx_data)+" MiB' >> /root/FlowControl/stopss.log"
     os.system(cmd)
 else:pass
 
